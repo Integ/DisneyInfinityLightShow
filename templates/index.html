@@ -1,0 +1,38 @@
+<!doctype html>
+<head>
+  <title>Infinity Light</title>
+</head>
+<body>
+  <h1>Infinity Light</h1>
+  <div>
+    <input type="color" />
+    <label></label>
+  </div>
+  <script>
+const curColor = document.querySelector('label');
+const colorInput = document.querySelector("input");
+curColor.textContent = colorInput.value;
+
+colorInput.addEventListener('change', (event) => {
+  let color = event.target.value;
+  curColor.textContent = color;
+  
+  const data = { color };
+  fetch('/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data),
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Success:', data);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+
+});
+  </script>
+</body>
