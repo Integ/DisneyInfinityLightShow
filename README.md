@@ -1,5 +1,5 @@
 # Disney-Infinity
-A small C++ application that finds all USB Portals of Infinity Bases and changes the lights
+A small application that finds all Disney Infinity and changes the lights on a webpage.
 
 ### Usage:
 
