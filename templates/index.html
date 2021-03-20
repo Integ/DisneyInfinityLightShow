@@ -4,20 +4,36 @@
 </head>
 <body>
   <h1>Infinity Light</h1>
-  <div>
+  <div id="light1">
+    <input type="color" />
+    <label></label>
+  </div>
+  <div id="light2">
+    <input type="color" />
+    <label></label>
+  </div>
+  <div id="light3">
     <input type="color" />
     <label></label>
   </div>
   <script>
-const curColor = document.querySelector('label');
-const colorInput = document.querySelector("input");
-curColor.textContent = colorInput.value;
+const curColor1 = document.querySelector('#light1 label');
+const colorInput1 = document.querySelector("#light1 input");
+curColor1.textContent = colorInput1.value;
 
-colorInput.addEventListener('change', (event) => {
+const curColor2 = document.querySelector('#light2 label');
+const colorInput2 = document.querySelector("#light2 input");
+curColor2.textContent = colorInput2.value;
+
+const curColor3 = document.querySelector('#light3 label');
+const colorInput3 = document.querySelector("#light3 input");
+curColor3.textContent = colorInput3.value;
+
+colorInput1.addEventListener('change', (event) => {
   let color = event.target.value;
-  curColor.textContent = color;
+  curColor1.textContent = color;
   
-  const data = { color };
+  const data = { lightId: 1, color };
   fetch('/', {
     method: 'POST',
     headers: {
@@ -32,7 +48,48 @@ colorInput.addEventListener('change', (event) => {
   .catch((error) => {
     console.error('Error:', error);
   });
+});
 
+colorInput2.addEventListener('change', (event) => {
+  let color = event.target.value;
+  curColor2.textContent = color;
+  
+  const data = { lightId: 2, color };
+  fetch('/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data),
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Success:', data);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+});
+
+colorInput3.addEventListener('change', (event) => {
+  let color = event.target.value;
+  curColor3.textContent = color;
+  
+  const data = { lightId: 3, color };
+  fetch('/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data),
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Success:', data);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
 });
   </script>
 </body>
