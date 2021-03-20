@@ -4,36 +4,46 @@
 </head>
 <body>
   <h1>Infinity Light</h1>
+  <div id="changeAll">
+    <input type="checkbox" />
+    <label>Change All Lights Together</label>
+  </div>
   <div id="light1">
-    <input type="color" />
+    <input type="color" value="#FF0000" />
     <label></label>
   </div>
   <div id="light2">
-    <input type="color" />
+    <input type="color" value="#00FF00" />
     <label></label>
   </div>
   <div id="light3">
-    <input type="color" />
+    <input type="color" value="#0000FF" />
     <label></label>
   </div>
   <script>
-const curColor1 = document.querySelector('#light1 label');
+const curColor1 = document.querySelector("#light1 label");
 const colorInput1 = document.querySelector("#light1 input");
 curColor1.textContent = colorInput1.value;
 
-const curColor2 = document.querySelector('#light2 label');
+const curColor2 = document.querySelector("#light2 label");
 const colorInput2 = document.querySelector("#light2 input");
 curColor2.textContent = colorInput2.value;
 
-const curColor3 = document.querySelector('#light3 label');
+const curColor3 = document.querySelector("#light3 label");
 const colorInput3 = document.querySelector("#light3 input");
 curColor3.textContent = colorInput3.value;
 
 colorInput1.addEventListener('change', (event) => {
   let color = event.target.value;
+  const isChangeAll = document.querySelector("#changeAll input").checked;
   curColor1.textContent = color;
-  
-  const data = { lightId: 1, color };
+  if(isChangeAll) {
+    colorInput2.value = color;
+    colorInput3.value = color;
+    curColor2.textContent = color;
+    curColor3.textContent = color;
+  }
+  const data = { lightId: isChangeAll ? 0 : 1, color };
   fetch('/', {
     method: 'POST',
     headers: {
@@ -52,9 +62,15 @@ colorInput1.addEventListener('change', (event) => {
 
 colorInput2.addEventListener('change', (event) => {
   let color = event.target.value;
+  const isChangeAll = document.querySelector("#changeAll input").checked;
   curColor2.textContent = color;
-  
-  const data = { lightId: 2, color };
+  if(isChangeAll) {
+    colorInput1.value = color;
+    colorInput3.value = color;
+    curColor1.textContent = color;
+    curColor3.textContent = color;
+  }
+  const data = { lightId: isChangeAll ? 0 : 2, color };
   fetch('/', {
     method: 'POST',
     headers: {
@@ -73,9 +89,15 @@ colorInput2.addEventListener('change', (event) => {
 
 colorInput3.addEventListener('change', (event) => {
   let color = event.target.value;
+  const isChangeAll = document.querySelector("#changeAll input").checked;
   curColor3.textContent = color;
-  
-  const data = { lightId: 3, color };
+  if(isChangeAll) {
+    colorInput1.value = color;
+    colorInput2.value = color;
+    curColor1.textContent = color;
+    curColor2.textContent = color;
+  }
+  const data = { lightId: isChangeAll ? 0 : 3, color };
   fetch('/', {
     method: 'POST',
     headers: {
