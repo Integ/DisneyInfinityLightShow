@@ -36,4 +36,6 @@ def index():
             "error": error
         }
     elif request.method == 'GET':
-        return render_template('index.html')
+        f = open('/sys/class/thermal/thermal_zone0/temp', 'r')
+        cpu_temp = int(f.readline()) / 1000
+        return render_template('index.html', cpu_temp=cpu_temp)
