@@ -1,0 +1,33 @@
+body {
+  background-color: #c82523;
+  animation: mb 120s infinite;
+}
+
+@keyframes mb {
+  0% {background-color: #018A02;}
+  4% {background-color: #0A843E;}
+  8% {background-color: #0A843E;}
+  12% {background-color: #0D8343;}
+  16% {background-color: #157C7C;}
+  20% {background-color: #1C77AD;}
+  24% {background-color: #2170DF;}
+  28% {background-color: #375CDB;}
+  32% {background-color: #6033C0;}
+  36% {background-color: #731DAF;}
+  40% {background-color: #8D0298;}
+  44% {background-color: #96077C;}
+  48% {background-color: #9E0F67;}
+  52% {background-color: #A31453;}
+  56% {background-color: #AF1840;}
+  60% {background-color: #C63A3D;}
+  64% {background-color: #D44F3B;}
+  68% {background-color: #EC7337;}
+  72% {background-color: #FF8937;}
+  76% {background-color: #CD934C;}
+  80% {background-color: #4AA18A;}
+  84% {background-color: #01A9AA;}
+  88% {background-color: #00A386;}
+  92% {background-color: #009B5C;}
+  96% {background-color: #02932F;}
+  100% {background-color: #018A02;}
+}
