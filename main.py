@@ -2,6 +2,7 @@ from flask import Flask
 from flask import request
 from flask import render_template
 import pexpect
+from datetime import datetime, timezone
 
 child = pexpect.spawn('./lightshow')
 child.expect('lights count: 3')
@@ -36,4 +37,8 @@ def index():
             "error": error
         }
     elif request.method == 'GET':
-        return render_template('index.html')
+        now = datetime.now()
+        dt = now.astimezone(timezone.utc).strftime('%a %b %d %H:%M:%S %Z %Y')
+        f = open('/sys/class/thermal/thermal_zone0/temp', 'r')
+        cpu_temp = int(f.readline()) / 1000
+        return render_template('index.html', datetime=dt, cpu_temp=cpu_temp)

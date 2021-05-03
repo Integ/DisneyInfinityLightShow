@@ -1,9 +1,18 @@
 <!doctype html>
 <head>
   <title>Infinity Light</title>
+  <link rel="stylesheet" href="static/metrobg.css" />
 </head>
 <body>
+  <div>
+    CPU Temprature: {{ cpu_temp }}°C
+    <span style="padding-left:50px;">{{ datetime }}</span>
+  </div>
   <h1>Infinity Light</h1>
+  <div id="lightShow">
+    <input type="checkbox" checked />
+    <label>Light Show</label>
+  </div>
   <div id="changeAll">
     <input type="checkbox" />
     <label>Change All Lights Together</label>
@@ -21,6 +30,36 @@
     <label></label>
   </div>
   <script>
+const body = document.querySelector('body');
+setInterval(getBGColor, 500);
+function getBGColor() {
+  const isLightShow = document.querySelector("#lightShow input").checked;
+  const style = getComputedStyle(body);
+  if(isLightShow) {
+    let rgb = style.backgroundColor.match(/\d+/g);
+    let color = rgbToHex(rgb);
+    const data = { lightId: 0, color };
+    fetch('/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+  }
+}
+
+function rgbToHex(rgb) {
+  return "#" + ((1 << 24) + (parseInt(rgb[0]) << 16) + (parseInt(rgb[1]) << 8) + parseInt(rgb[2])).toString(16).slice(1);
+}
+
 const curColor1 = document.querySelector("#light1 label");
 const colorInput1 = document.querySelector("#light1 input");
 curColor1.textContent = colorInput1.value;
