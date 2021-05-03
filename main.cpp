@@ -15,6 +15,7 @@
 #include "InfinityPortal.h"
 
 using namespace std;
+InfinityPortal myInfinityPortal;
 
 int main(int argc, char** argv) {
 	libusb_device** devices;
@@ -29,7 +30,6 @@ int main(int argc, char** argv) {
 
 	int retVal = 0;
 	int infinityPortalIds[0xff];
-	int infinityPortalCount = 0;
 
 	for(int i = 0 ; i < devicesCount ; i++) {
 		retVal = libusb_open(devices[i], &tryDeviceHandler);
@@ -49,28 +49,27 @@ int main(int argc, char** argv) {
 		return -1;
 	}
 
-	InfinityPortal infinityPortals[infinityPortalCount];
-	int j;
-
-	for(j = 0 ; j < infinityPortalCount ; j++) {
-		infinityPortals[j] = InfinityPortal(infinityPortalIds[j]);
-	}
+	myInfinityPortal = InfinityPortal(infinityPortalIds[0]);
 
 	while(true) {
-		for(j = 0 ; j < infinityPortalCount; j++) {
-			infinityPortals[j]. fadeColour(1, 0xFF, 0x0, 0x0);
-			infinityPortals[j]. fadeColour(2, 0x0, 0xFF, 0x0);
-			infinityPortals[j]. fadeColour(3, 0x0, 0x0, 0xFF);
-			usleep(500000); 
-			infinityPortals[j]. fadeColour(1, 0x0, 0xFF, 0x0);
-			infinityPortals[j]. fadeColour(2, 0x0, 0x0, 0xFF);
-			infinityPortals[j]. fadeColour(3, 0xFF, 0x0, 0x0);
-			usleep(500000); 
-			infinityPortals[j]. fadeColour(1, 0x0, 0x0, 0xFF);
-			infinityPortals[j]. fadeColour(2, 0xFF, 0x0, 0x0);
-			infinityPortals[j]. fadeColour(3, 0x0, 0xFF, 0x0);
-			usleep(500000);
-		}
+		myInfinityPortal. fadeColour(1, 0xFF, 0x0, 0x0);
+		myInfinityPortal. fadeColour(2, 0x0, 0xFF, 0x0);
+		myInfinityPortal. fadeColour(3, 0x0, 0x0, 0xFF);
+		usleep(500000); 
+		myInfinityPortal. fadeColour(1, 0x0, 0xFF, 0x0);
+		myInfinityPortal. fadeColour(2, 0x0, 0x0, 0xFF);
+		myInfinityPortal. fadeColour(3, 0xFF, 0x0, 0x0);
+		usleep(500000); 
+		myInfinityPortal. fadeColour(1, 0x0, 0x0, 0xFF);
+		myInfinityPortal. fadeColour(2, 0xFF, 0x0, 0x0);
+		myInfinityPortal. fadeColour(3, 0x0, 0xFF, 0x0);
+		usleep(500000);
 	}
+	auto turnOff = [] () {
+		for(j = 1; j <= 3; j++) {
+			myInfinityPortal.setColor(j, 0x0, 0x0, 0x0);
+		}
+	};
+	atexit(turnOff);
 	return 0;
 }
