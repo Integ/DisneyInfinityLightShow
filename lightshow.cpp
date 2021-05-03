@@ -5,20 +5,26 @@
  **/
 
 #include <cstdlib>
+#include <csignal>
 #include <stdio.h>
 #include <sys/types.h>
 #include <iostream>
-#include <math.h>
 #include "libusb-1.0/libusb.h"
 #include <unistd.h>
 #include "InfinityPortal.h"
 
 using namespace std;
+InfinityPortal myInfinityPortal;
+
+void turnOff(int signum) {
+	cout << "Turning Lights Off, (" << signum << ") recived. \n";
+	for(int i = 1; i <= 3; i++) {
+		myInfinityPortal.setColour(i, 0x0, 0x0, 0x0);
+	}
+	exit(signum);
+}
 
 int main(int argc, char** argv) {
-
-	srand (time(NULL));
-
 	libusb_device** devices;
 	libusb_context* context;
 	struct libusb_device_handle* tryDeviceHandler;
@@ -40,6 +46,7 @@ int main(int argc, char** argv) {
 		}
 		libusb_get_device_descriptor(devices[i], &descriptor);
 		if(descriptor.idVendor == 0x0e6f && descriptor.idProduct == 0x0129) {
+			printf("Found Infinity Portal\n");
 			infinityPortalIds[infinityPortalCount] = i;
 			infinityPortalCount++;
 		}
@@ -50,20 +57,14 @@ int main(int argc, char** argv) {
 		return -1;
 	}
 
-	InfinityPortal infinityPortals[infinityPortalCount];
+	myInfinityPortal = InfinityPortal(infinityPortalIds[0]);
 
-	int j;
-	int lightsCount = 0;
+	myInfinityPortal.setColour(1, 0xFF, 0x0, 0x0);
+	myInfinityPortal.setColour(2, 0x0, 0xFF, 0x0);
+	myInfinityPortal.setColour(3, 0x0, 0x0, 0xFF);
 
-	for(j = 0 ; j < infinityPortalCount ; j++) {
-		infinityPortals[j] = InfinityPortal(infinityPortalIds[j]);
-		lightsCount += 3;
-	}
-
-	printf("lights count: %d\n", lightsCount);
-	infinityPortals[0].setColour(1, 0xFF, 0x0, 0x0);
-	infinityPortals[0].setColour(2, 0x0, 0xFF, 0x0);
-	infinityPortals[0].setColour(3, 0x0, 0x0, 0xFF);
+	signal(SIGINT, turnOff);
+	signal(SIGTERM, turnOff);
 
         for (std::string line; std::getline(std::cin, line);) {
 		size_t pos1 = line.find(" ", 0);
@@ -88,11 +89,10 @@ int main(int argc, char** argv) {
 		int b3 = stoi(line.substr(pos8 + 1, line.size()).c_str());
         
 		printf("Got r1:%d g1:%d b1:%d r2:%d g2:%d b2:%d r3:%d g3:%d b3:%d\n", r1, g1, b1, r2, g2, b2, r3, g3, b3);
-		infinityPortals[0].setColour(1, r1, g1, b1);
-		infinityPortals[0].setColour(2, r2, g2, b2);
-		infinityPortals[0].setColour(3, r3, g3, b3);
+		myInfinityPortal.setColour(1, r1, g1, b1);
+		myInfinityPortal.setColour(2, r2, g2, b2);
+		myInfinityPortal.setColour(3, r3, g3, b3);
 	}
 
-	printf("Done!\n");
 	return 0;
 }

@@ -6,16 +6,24 @@
  **/
 
 #include <cstdlib>
+#include <csignal>
 #include <stdio.h>
 #include <sys/types.h>
 #include <iostream>
-#include <math.h>
 #include "libusb-1.0/libusb.h"
 #include <unistd.h>
 #include "InfinityPortal.h"
 
 using namespace std;
 InfinityPortal myInfinityPortal;
+
+void turnOff(int signum) {
+	cout << "Turning Off Lights, (" << signum << ") recived.\n";
+	for(int i = 1; i <= 3; i++) {
+		myInfinityPortal.setColour(i, 0x0, 0x0, 0x0);
+	}
+	exit(signum);
+};
 
 int main(int argc, char** argv) {
 	libusb_device** devices;
@@ -30,6 +38,7 @@ int main(int argc, char** argv) {
 
 	int retVal = 0;
 	int infinityPortalIds[0xff];
+	int infinityPortalCount = 0;
 
 	for(int i = 0 ; i < devicesCount ; i++) {
 		retVal = libusb_open(devices[i], &tryDeviceHandler);
@@ -51,6 +60,9 @@ int main(int argc, char** argv) {
 
 	myInfinityPortal = InfinityPortal(infinityPortalIds[0]);
 
+	signal(SIGINT, turnOff);
+	signal(SIGTERM, turnOff);
+
 	while(true) {
 		myInfinityPortal. fadeColour(1, 0xFF, 0x0, 0x0);
 		myInfinityPortal. fadeColour(2, 0x0, 0xFF, 0x0);
@@ -65,11 +77,5 @@ int main(int argc, char** argv) {
 		myInfinityPortal. fadeColour(3, 0x0, 0xFF, 0x0);
 		usleep(500000);
 	}
-	auto turnOff = [] () {
-		for(j = 1; j <= 3; j++) {
-			myInfinityPortal.setColor(j, 0x0, 0x0, 0x0);
-		}
-	};
-	atexit(turnOff);
 	return 0;
 }

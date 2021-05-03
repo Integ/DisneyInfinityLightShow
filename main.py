@@ -2,10 +2,12 @@ from flask import Flask
 from flask import request
 from flask import render_template
 import pexpect
+import sys
+import signal
 from datetime import datetime, timezone
 
 child = pexpect.spawn('./lightshow')
-child.expect('lights count: 3')
+child.expect('Found Infinity Portal')
 lights = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
 
 app = Flask(__name__)
@@ -42,3 +44,10 @@ def index():
         f = open('/sys/class/thermal/thermal_zone0/temp', 'r')
         cpu_temp = int(f.readline()) / 1000
         return render_template('index.html', datetime=dt, cpu_temp=cpu_temp)
+
+def lightOff(signum, frame):
+    child.sendline('0 0 0 0 0 0 0 0 0')
+    print("Lights Off. (" + str(signum) + ") recieved.")
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, lightOff)
